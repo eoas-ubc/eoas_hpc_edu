@@ -22,7 +22,7 @@ kernelspec:
 
 2) An example jupyter-book: [Problem solving with python](https://phaustin.github.io/Problem-Solving-with-Python-37-Edition/)
 
-3) Introduce the grad student/faculty/postdoc component being build at [eoas_python](https://github.com/eoas-ubc/eoas_python)
+3) Introduce the grad student/faculty/postdoc component being built at [eoas_python](https://github.com/eoas-ubc/eoas_python)
 
 4) Next steps -- start a discussion about what high performance computing problem(s) you'd like to solve.  This discussion can occur via zoom chat today, pull requests on [eoas_python](https://github.com/eoas-ubc/eoas_python) and on the `#high-performance-python channel` in the [UBC datascience slack workspace](https://join.slack.com/t/ubc-datascience/signup)
    

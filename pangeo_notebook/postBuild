@@ -1,0 +1,10 @@
+#!/bin/bash -v
+
+echo "starting jupyter extension installs"
+jupyter labextension install --clean \
+        @jupyter-widgets/jupyterlab-manager
+jupyter labextension install jupyterlab-jupytext
+jupyter labextension install  @bokeh/jupyter_bokeh 
+jupyter lab build
+#EOF
+
