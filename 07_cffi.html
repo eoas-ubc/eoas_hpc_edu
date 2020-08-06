@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>7. Calling C++/Fortran using ctypes &#8212; HPP project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+    <link href="_static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="_static/sphinx-book-theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/sphinx-book-theme.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/mystnb.js"></script>
+    <script src="_static/sphinx-book-theme.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="6. Using C++/Fortran libraries with pybind11" href="06_pybind11.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <h1 class="site-logo" id="site-title">HPP project</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="00_intro.html">
+   High Performance Python
+  </a>
+ </li>
+</ul>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="01_joblib.html">
+   1. Introduction to joblib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_xarray_zarr.html">
+   2. xarray, netcdf and zarr
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_dask_and_zarr.html">
+   3. Using dask and zarr for multithreaded input/output
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_numba.html">
+   4. Using numba to release the GIL
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_dask_quickstart.html">
+   5. A short dask example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_pybind11.html">
+   6. Using C++/Fortran libraries with pybind11
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   7. Calling C++/Fortran using ctypes
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/07_cffi.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> On this page
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-conda-to-manage-python-libraries">
+   7.1. Using conda to manage python libraries
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#accessing-the-functions-from-python-using-cffi">
+   7.2. Accessing the functions from python using CFFI
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-this-in-a-threadpool">
+     7.2.1. Running this in a threadpool
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="calling-c-fortran-using-ctypes">
+<h1><span class="section-number">7. </span>Calling C++/Fortran using ctypes<a class="headerlink" href="#calling-c-fortran-using-ctypes" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference external" href="https://github.com/phaustin/parallel_python_course/tree/master/code_examples/cffi_funs">cffi_funs</a> folder shows how to set up a C++ file so that it compiled with <a class="reference external" href="http://preshing.com/20170511/how-to-build-a-cmake-based-project/">cmake</a> and also <a class="reference external" href="http://preshing.com/20170522/learn-cmakes-scripting-language-in-15-minutes/">here</a></p>
+<p>The folder contains <a class="reference external" href="https://github.com/phaustin/parallel_python_course/blob/master/code_examples/cffi_funs/Readme_cffi_funs.rst">these files</a></p>
+<p><strong>Demo</strong></p>
+<p>Show how to build a conda archive with:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda build .
+</pre></div>
+</div>
+<p>and then upload it to your <a class="reference external" href="https://anaconda.org/phaustin/dashboard">Anaconda channel</a></p>
+<p>Where it can be installed into a conda environment with:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda install -c phaustin cffi_funs
+</pre></div>
+</div>
+<div class="section" id="using-conda-to-manage-python-libraries">
+<h2><span class="section-number">7.1. </span>Using conda to manage python libraries<a class="headerlink" href="#using-conda-to-manage-python-libraries" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://github.com/phaustin/parallel_python_course/tree/master/code_examples/westgrid/cffi_practice">cffi_practice</a>
+defines the function get_paths() with locates the libcffi_funs.so module so python can
+import it</p>
+<p><strong>Demo</strong></p>
+<p>Show how to build and upload cffi_practice to my conda channel</p>
+<p>The get_paths function is defined in this package in the <a class="reference external" href="https://github.com/phaustin/parallel_python_course/blob/master/code_examples/cffi_practice/cffi_practice/__init__.py"><strong>init</strong>.py</a> module.</p>
+</div>
+<div class="section" id="accessing-the-functions-from-python-using-cffi">
+<h2><span class="section-number">7.2. </span>Accessing the functions from python using CFFI<a class="headerlink" href="#accessing-the-functions-from-python-using-cffi" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://cffi.readthedocs.io/en/latest/overview.html">C foreign function interface</a> provides a way to call the cffi_funs from python</p>
+<p>Here is an example that exposes the get_thread_id and get_proces_id functions from the cffi_fun package</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cffi</span> <span class="kn">import</span> <span class="n">FFI</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span>
+<span class="kn">from</span> <span class="nn">cffi_practice</span> <span class="kn">import</span> <span class="n">get_paths</span>
+<span class="c1">#</span>
+<span class="c1">#  locate the library</span>
+<span class="c1">#</span>
+<span class="n">lib_so_file</span><span class="o">=</span><span class="n">get_paths</span><span class="p">()[</span><span class="s1">&#39;libfile&#39;</span><span class="p">]</span>
+<span class="n">ffi</span><span class="o">=</span><span class="n">FFI</span><span class="p">()</span>
+<span class="n">ffi</span><span class="o">.</span><span class="n">cdef</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    void get_thread_id(char *thread_id);</span>
+<span class="s2">    void get_process_id(char *process_id);</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="c1">#  open the library file</span>
+<span class="c1">#</span>
+<span class="n">lib</span> <span class="o">=</span> <span class="n">ffi</span><span class="o">.</span><span class="n">dlopen</span><span class="p">(</span><span class="n">lib_so_file</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;found these functions in module: &#39;</span><span class="p">,</span><span class="nb">dir</span><span class="p">(</span><span class="n">lib</span><span class="p">))</span>
+<span class="c1">#</span>
+<span class="c1"># create a 25 character C array to hold the ouput</span>
+<span class="c1">#</span>
+<span class="n">arg_thread</span> <span class="o">=</span> <span class="n">ffi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;char[]&quot;</span><span class="p">,</span><span class="mi">25</span><span class="p">)</span>  <span class="c1">#(C++)</span>
+<span class="c1">#</span>
+<span class="c1"># copy the bytes into arg_thread  (C++)</span>
+<span class="c1">#</span>
+<span class="n">lib</span><span class="o">.</span><span class="n">get_thread_id</span><span class="p">(</span><span class="n">arg_thread</span><span class="p">)</span>  
+<span class="c1">#</span>
+<span class="c1"># get the bytes into a python byte object</span>
+<span class="c1">#</span>
+<span class="n">out_thread</span><span class="o">=</span><span class="n">ffi</span><span class="o">.</span><span class="n">string</span><span class="p">(</span><span class="n">arg_thread</span><span class="p">)</span>  <span class="c1">#C++ to python</span>
+<span class="c1">#</span>
+<span class="c1"># turn the bytes into a utf-8 string</span>
+<span class="c1">#</span>
+<span class="n">str_out</span><span class="o">=</span><span class="n">out_thread</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>  <span class="c1">#python</span>
+<span class="c1">#</span>
+<span class="c1"># print it out</span>
+<span class="c1">#</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Here is the thread id in hex: -</span><span class="si">{</span><span class="n">str_out</span><span class="si">}</span><span class="s2">-&quot;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="c1"># repeat for the process</span>
+<span class="c1">#</span>
+<span class="n">arg_process</span> <span class="o">=</span> <span class="n">ffi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;char[]&quot;</span><span class="p">,</span><span class="mi">25</span><span class="p">)</span> 
+<span class="n">lib</span><span class="o">.</span><span class="n">get_process_id</span><span class="p">(</span><span class="n">arg_process</span><span class="p">)</span>
+<span class="n">out_process</span><span class="o">=</span><span class="n">ffi</span><span class="o">.</span><span class="n">string</span><span class="p">(</span><span class="n">arg_process</span><span class="p">)</span>
+<span class="n">str_out</span><span class="o">=</span><span class="n">out_process</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;here is the process ide in base 10: -</span><span class="si">{</span><span class="n">str_out</span><span class="si">}</span><span class="s2">-&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="running-this-in-a-threadpool">
+<h3><span class="section-number">7.2.1. </span>Running this in a threadpool<a class="headerlink" href="#running-this-in-a-threadpool" title="Permalink to this headline">¶</a></h3>
+<p>The following script uses joblib to create 10 jobs to call the cffi functions in parallel, returning
+the pointers to the character array and convertingthem to python strings.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nprocs</span><span class="o">=</span><span class="mi">10</span>
+<span class="n">arg_list</span><span class="o">=</span><span class="p">[]</span>
+<span class="n">fun_list</span><span class="o">=</span><span class="p">[]</span>
+<span class="n">dict_list</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nprocs</span><span class="p">):</span>
+    <span class="n">fun_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">get_thread_id</span><span class="p">)</span>
+    <span class="n">result_var</span><span class="o">=</span><span class="n">ffi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;char[]&quot;</span><span class="p">,</span><span class="mi">25</span><span class="p">)</span>
+    <span class="n">arg_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result_var</span><span class="p">)</span>
+    <span class="n">dict_list</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
+<span class="n">ptr_list</span><span class="o">=</span><span class="p">[[</span><span class="n">ffi</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;char*&quot;</span><span class="p">,</span><span class="n">item</span><span class="p">)]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">arg_list</span><span class="p">]</span>
+<span class="n">jobs</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">fun_list</span><span class="p">,</span><span class="n">ptr_list</span><span class="p">,</span><span class="n">dict_list</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;here are the pointers to hold the ids: </span><span class="si">{</span><span class="n">ptr_list</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">nprocs</span><span class="p">,</span><span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">parallel</span><span class="p">:</span>
+    <span class="n">parallel</span><span class="p">(</span><span class="n">jobs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;here are the thread ids&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">ptr_list</span><span class="p">:</span>
+    <span class="n">out_thread</span><span class="o">=</span><span class="n">ffi</span><span class="o">.</span><span class="n">string</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;thread id: &#39;</span><span class="p">,</span><span class="n">out_thread</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="06_pybind11.html" title="previous page"><span class="section-number">6. </span>Using C++/Fortran libraries with pybind11</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By The Jupyter Book community<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    <script src="_static/js/index.js"></script>
+    
+  </body>
+</html>

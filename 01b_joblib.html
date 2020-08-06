@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>2. Introduction to joblib &#8212; HPP project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+    <link href="_static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="_static/sphinx-book-theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/sphinx-book-theme.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/mystnb.js"></script>
+    <script src="_static/sphinx-book-theme.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="3. xarray, netcdf and zarr" href="02_xarray_zarr.html" />
+    <link rel="prev" title="1. Basic concepts" href="01a_definitions.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <h1 class="site-logo" id="site-title">HPP project</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="00_intro.html">
+   High Performance Python
+  </a>
+ </li>
+</ul>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_definitions.html">
+   1. Basic concepts
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   2. Introduction to joblib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_xarray_zarr.html">
+   3. xarray, netcdf and zarr
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_dask_and_zarr.html">
+   4. Using dask and zarr for multithreaded input/output
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_numba.html">
+   5. Using numba to release the GIL
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_dask_quickstart.html">
+   6. A short dask example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_pybind11.html">
+   7. Using C++/Fortran libraries with pybind11
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07_cffi.html">
+   8. Calling C++/Fortran using ctypes
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/01b_joblib.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> On this page
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#creating-a-process-or-thread-pool-with-joblib">
+   2.1. Creating a process or thread pool with joblib
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-a-threadsafe-function">
+     2.1.1. Running a threadsafe function
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#setup-logging-so-we-can-know-what-process-and-thread-we-are-running">
+     2.1.2. Setup logging so we can know what process and thread we are running
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-two-functions-one-to-print-thread-and-process-ids-and-one-to-run-the-wait-for-loop">
+     2.1.3. Create two functions, one to print thread and process ids, and one to run the wait_for loop
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#now-repeat-this-holding-the-gil">
+     2.1.4. Now repeat this holding the GIL
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#now-repeat-with-processes-instead-of-threads">
+     2.1.5. Now repeat with processes instead of threads
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#summary">
+     2.1.6. Summary
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="introduction-to-joblib">
+<h1><span class="section-number">2. </span>Introduction to joblib<a class="headerlink" href="#introduction-to-joblib" title="Permalink to this headline">¶</a></h1>
+<p>This notebook shows how to use joblib to execute jobs on multiple threads or processes</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">contexttimer</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="creating-a-process-or-thread-pool-with-joblib">
+<h2><span class="section-number">2.1. </span>Creating a process or thread pool with joblib<a class="headerlink" href="#creating-a-process-or-thread-pool-with-joblib" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://pythonhosted.org/joblib/index.html">joblib</a> Provides the best way to run naively parallel jobs on multiple threads or processes in python.</p>
+<ul class="simple">
+<li><p>It integrates seamlessly with <a class="reference external" href="http://distributed.readthedocs.io/en/latest/joblib.html">dask</a>
+and <a class="reference external" href="http://scikit-learn.org/stable/modules/model_persistence.html">scikit-learn</a></p></li>
+<li><p>It is undergoing rapid development: e.g. <a class="reference external" href="https://github.com/tomMoral/loky">loky</a></p></li>
+<li><p>To use it, create a Parallel object that runs a list of functions, where each function is part of a tuple that specifies the arguments and keywords (if any)</p></li>
+</ul>
+<div class="section" id="running-a-threadsafe-function">
+<h3><span class="section-number">2.1.1. </span>Running a threadsafe function<a class="headerlink" href="#running-a-threadsafe-function" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="s1">&#39;float64(int64)&#39;</span><span class="p">,</span> <span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nogil</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1">#release the GIL!</span>
+<span class="k">def</span> <span class="nf">wait_loop_nogil</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function under test.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+                    <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">4</span>
+                    <span class="n">out</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="o">**</span><span class="mf">2.</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="s1">&#39;float64(int64)&#39;</span><span class="p">,</span> <span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nogil</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1">#hold the GIL</span>
+<span class="k">def</span> <span class="nf">wait_loop_withgil</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function under test.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+                    <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">4</span>
+                    <span class="n">out</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="o">**</span><span class="mf">2.</span>
+    <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="setup-logging-so-we-can-know-what-process-and-thread-we-are-running">
+<h3><span class="section-number">2.1.2. </span>Setup logging so we can know what process and thread we are running<a class="headerlink" href="#setup-logging-so-we-can-know-what-process-and-thread-we-are-running" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span>
+                    <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(message)s</span><span class="s1"> </span><span class="si">%(threadName)s</span><span class="s1"> </span><span class="si">%(processName)s</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">find_ids</span><span class="p">():</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;debug logging: &#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="create-two-functions-one-to-print-thread-and-process-ids-and-one-to-run-the-wait-for-loop">
+<h3><span class="section-number">2.1.3. </span>Create two functions, one to print thread and process ids, and one to run the wait_for loop<a class="headerlink" href="#create-two-functions-one-to-print-thread-and-process-ids-and-one-to-run-the-wait-for-loop" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Important point – the logging module is <strong>threadsafe</strong></p></li>
+<li><p>Submit 6 jobs queued on 3 processors</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">njobs</span><span class="o">=</span><span class="mi">12</span>
+<span class="n">nprocs</span><span class="o">=</span><span class="mi">3</span>
+<span class="n">thread_id_jobs</span> <span class="o">=</span><span class="p">[(</span><span class="n">find_ids</span><span class="p">,[],{})</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nprocs</span><span class="p">)]</span>
+<span class="n">nloops</span><span class="o">=</span><span class="mi">3000</span>
+<span class="n">calc_jobs</span><span class="o">=</span><span class="p">[(</span><span class="n">wait_loop_nogil</span><span class="p">,[</span><span class="n">nloops</span><span class="p">],{})</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">njobs</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">calc_jobs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">contexttimer</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">)</span> <span class="k">as</span> <span class="n">wall</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">contexttimer</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">process_time</span><span class="p">)</span> <span class="k">as</span> <span class="n">cpu</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">nprocs</span><span class="p">,</span><span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">parallel</span><span class="p">:</span>
+            <span class="c1">#parallel(thread_id_jobs)</span>
+            <span class="n">results</span><span class="o">=</span><span class="n">parallel</span><span class="p">(</span><span class="n">calc_jobs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;wall time </span><span class="si">{</span><span class="n">wall</span><span class="o">.</span><span class="n">elapsed</span><span class="si">}</span><span class="s1"> and cpu time </span><span class="si">{</span><span class="n">cpu</span><span class="o">.</span><span class="n">elapsed</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Each job was run on a different thread but in the same process</p></li>
+<li><p>Note that the cpu time is larger than the wall time, confirming that we’ve release the GIL.</p></li>
+</ul>
+</div>
+<div class="section" id="now-repeat-this-holding-the-gil">
+<h3><span class="section-number">2.1.4. </span>Now repeat this holding the GIL<a class="headerlink" href="#now-repeat-this-holding-the-gil" title="Permalink to this headline">¶</a></h3>
+<p>Create a new set of jobs that hold the GIL</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calc_jobs</span><span class="o">=</span><span class="p">[(</span><span class="n">wait_loop_withgil</span><span class="p">,[</span><span class="n">nloops</span><span class="p">],{})</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">njobs</span><span class="p">)]</span>
+<span class="k">with</span> <span class="n">contexttimer</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">)</span> <span class="k">as</span> <span class="n">wall</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">contexttimer</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">process_time</span><span class="p">)</span> <span class="k">as</span> <span class="n">cpu</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">nprocs</span><span class="p">,</span><span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">parallel</span><span class="p">:</span>
+            <span class="c1">#parallel(thread_id_jobs)</span>
+            <span class="n">results</span><span class="o">=</span><span class="n">parallel</span><span class="p">(</span><span class="n">calc_jobs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;wall time </span><span class="si">{</span><span class="n">wall</span><span class="o">.</span><span class="n">elapsed</span><span class="si">}</span><span class="s1"> and cpu time </span><span class="si">{</span><span class="n">cpu</span><span class="o">.</span><span class="n">elapsed</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>** Note that the speed is the same as if we ran on a single CPU **</p>
+</div>
+<div class="section" id="now-repeat-with-processes-instead-of-threads">
+<h3><span class="section-number">2.1.5. </span>Now repeat with processes instead of threads<a class="headerlink" href="#now-repeat-with-processes-instead-of-threads" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calc_jobs</span><span class="o">=</span><span class="p">[(</span><span class="n">wait_loop_withgil</span><span class="p">,[</span><span class="n">nloops</span><span class="p">],{})</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">njobs</span><span class="p">)]</span>
+<span class="k">with</span> <span class="n">contexttimer</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">)</span> <span class="k">as</span> <span class="n">wall</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">contexttimer</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">process_time</span><span class="p">)</span> <span class="k">as</span> <span class="n">cpu</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">nprocs</span><span class="p">,</span><span class="n">backend</span><span class="o">=</span><span class="s1">&#39;multiprocessing&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">parallel</span><span class="p">:</span>
+            <span class="c1">#parallel(thread_id_jobs)</span>
+            <span class="n">results</span><span class="o">=</span><span class="n">parallel</span><span class="p">(</span><span class="n">calc_jobs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;wall time </span><span class="si">{</span><span class="n">wall</span><span class="o">.</span><span class="n">elapsed</span><span class="si">}</span><span class="s1"> and cpu time </span><span class="si">{</span><span class="n">cpu</span><span class="o">.</span><span class="n">elapsed</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>** how do you explain the tiny cpu time? **</p>
+</div>
+<div class="section" id="summary">
+<h3><span class="section-number">2.1.6. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
+<ol class="simple">
+<li><p>For simple functions without Python code, Numba can release the GIL and you can get the benefit of multiple threads</p></li>
+<li><p>The joblib library can be used to queue dozens of jobs onto a specified number of processes or threads</p></li>
+<li><p>A process pool can execute pure python routines, but all data has to be copied to and from each process.</p></li>
+</ol>
+</div>
+</div>
+</div>
+
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="01a_definitions.html" title="previous page"><span class="section-number">1. </span>Basic concepts</a>
+    <a class='right-next' id="next-link" href="02_xarray_zarr.html" title="next page"><span class="section-number">3. </span>xarray, netcdf and zarr</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By The Jupyter Book community<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    <script src="_static/js/index.js"></script>
+    
+  </body>
+</html>

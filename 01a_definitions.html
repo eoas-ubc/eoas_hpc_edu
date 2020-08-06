@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>1. Basic concepts &#8212; HPP project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+    <link href="_static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="_static/sphinx-book-theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/sphinx-book-theme.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/mystnb.js"></script>
+    <script src="_static/sphinx-book-theme.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. Introduction to joblib" href="01b_joblib.html" />
+    <link rel="prev" title="High Performance Python" href="00_intro.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <h1 class="site-logo" id="site-title">HPP project</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="00_intro.html">
+   High Performance Python
+  </a>
+ </li>
+</ul>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   1. Basic concepts
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b_joblib.html">
+   2. Introduction to joblib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_xarray_zarr.html">
+   3. xarray, netcdf and zarr
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_dask_and_zarr.html">
+   4. Using dask and zarr for multithreaded input/output
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_numba.html">
+   5. Using numba to release the GIL
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_dask_quickstart.html">
+   6. A short dask example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_pybind11.html">
+   7. Using C++/Fortran libraries with pybind11
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07_cffi.html">
+   8. Calling C++/Fortran using ctypes
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/01a_definitions.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> On this page
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#concurrency-vs-parallelism">
+   1.1. Concurrency vs. parallelism
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#threads-and-processes">
+     1.1.1. Threads and processes
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#threads-and-processes-in-python">
+       1.1.1.1. Threads and processes in Python
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#python-global-intepreter-lock">
+       1.1.1.2. Python global intepreter lock
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#thread-scheduling">
+     1.1.2. Thread scheduling
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#note-that-these-three-threads-are-taking-turns-resulting-in-a-computation-that-runs-slightly-slower-because-of-overhead-than-running-on-a-single-thread">
+       1.1.2.1. Note that these three threads are taking turns, resulting in a computation that runs slightly slower (because of overhead) than running on a single thread
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#releasing-the-gil">
+     1.1.3. Releasing the GIL
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="basic-concepts">
+<h1><span class="section-number">1. </span>Basic concepts<a class="headerlink" href="#basic-concepts" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="concurrency-vs-parallelism">
+<h2><span class="section-number">1.1. </span>Concurrency vs. parallelism<a class="headerlink" href="#concurrency-vs-parallelism" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://www.google.ca/search?q=concurrency+vs.+parallelism&amp;rlz=1C5CHFA_enCA698CA698&amp;oq=conncurrency+vs.+parallel&amp;aqs=chrome.1.69i57j0l5.6167j0j7&amp;sourceid=chrome&amp;ie=UTF-8">Google says: </a></p>
+<div class="section" id="threads-and-processes">
+<h3><span class="section-number">1.1.1. </span>Threads and processes<a class="headerlink" href="#threads-and-processes" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p>From <a class="reference external" href="https://en.wikipedia.org/wiki/Thread_(computing)">Wikipedia</a>:</p>
+<p>“In computer science, a thread of execution is the smallest sequence of programmed instructions that can be managed independently by a scheduler, which is typically a part of the operating system.[1] The implementation of threads and processes differs between operating systems, but in most cases a thread is a component of a process. Multiple threads can exist within one process, executing concurrently and sharing resources such as memory, while different processes do not share these resources. In particular, the threads of a process share its executable code and the values of its variables at any given time.”</p>
+</li>
+</ul>
+<div class="section" id="threads-and-processes-in-python">
+<h4><span class="section-number">1.1.1.1. </span>Threads and processes in Python<a class="headerlink" href="#threads-and-processes-in-python" title="Permalink to this headline">¶</a></h4>
+<p><a class="reference external" href="https://tommoral.github.io/pyparis17/#1">Reference: Thomas Moreau and Olivier Griesel, PyParis 2017 [Mor2017]</a></p>
+</div>
+<div class="section" id="python-global-intepreter-lock">
+<h4><span class="section-number">1.1.1.2. </span>Python global intepreter lock<a class="headerlink" href="#python-global-intepreter-lock" title="Permalink to this headline">¶</a></h4>
+<ol class="simple">
+<li><p>Motivation: python objects (lists, dicts, sets, etc.) manage their own memory by storing a counter that keeps track of how many copies of an object are in use.  Memory is reclaimed when that counter goes to zero.</p></li>
+<li><p>Having a globally available reference count makes it simple for Python extensions to create, modify and share python objects.</p></li>
+<li><p>To avoid memory corruption, a python process will only allow 1 thread at any given moment to run python code.  Any thread that wants to access python objects in that process needs to acquire the global interpreter lock (GIL).</p></li>
+<li><p>A python extension written in C, C++ or numba is free to release the GIL, provided it doesn’t create, destroy or modify any python objects.  For example: numpy, pandas, scipy.ndimage, scipy.integrate.quadrature all release the GIL</p></li>
+<li><p>Many python standard library input/output routines (file reading, networking) also release the GIL</p></li>
+<li><p>On the other hand:  hdf5, and therefore h5py and netCDF4, don’t release the GIL and are single threaded.</p></li>
+<li><p>Python comes with many libraries to manage both processes and threads.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="thread-scheduling">
+<h3><span class="section-number">1.1.2. </span>Thread scheduling<a class="headerlink" href="#thread-scheduling" title="Permalink to this headline">¶</a></h3>
+<p>If multiple threads are present in a python process, the python intepreter releases the GIL at specified intervals (5 miliseconds default) to allow them to execute:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;images/morreau1.png&#39;</span><span class="p">)</span>  <span class="c1">#[Mor2017]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="note-that-these-three-threads-are-taking-turns-resulting-in-a-computation-that-runs-slightly-slower-because-of-overhead-than-running-on-a-single-thread">
+<h4><span class="section-number">1.1.2.1. </span>Note that these three threads are taking turns, resulting in a computation that runs slightly slower (because of overhead) than running on a single thread<a class="headerlink" href="#note-that-these-three-threads-are-taking-turns-resulting-in-a-computation-that-runs-slightly-slower-because-of-overhead-than-running-on-a-single-thread" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+<div class="section" id="releasing-the-gil">
+<h3><span class="section-number">1.1.3. </span>Releasing the GIL<a class="headerlink" href="#releasing-the-gil" title="Permalink to this headline">¶</a></h3>
+<p>If the computation running on the thread has released the GIL, then it can run independently of other threads in the process.  Execution of these threads are scheduled by the operating system along with all the other threads and processes on the system.</p>
+<p>In particular, basic computation functions in Numpy, like (_<em>add_</em> (+), _<em>subtract_</em> (-) etc. release the GIL, as well as universal math functions like cos, sin etc.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;images/morreau2.png&#39;</span><span class="p">)</span>  <span class="c1">#[Morr2017]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;images/morreau3.png&#39;</span><span class="p">)</span> <span class="c1">#[Morr2017]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="00_intro.html" title="previous page">High Performance Python</a>
+    <a class='right-next' id="next-link" href="01b_joblib.html" title="next page"><span class="section-number">2. </span>Introduction to joblib</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By The Jupyter Book community<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    <script src="_static/js/index.js"></script>
+    
+  </body>
+</html>

@@ -1,0 +1,466 @@
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>3. Using dask and zarr for multithreaded input/output &#8212; HPP project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+    <link href="_static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="_static/sphinx-book-theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/sphinx-book-theme.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/mystnb.js"></script>
+    <script src="_static/sphinx-book-theme.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="4. Using numba to release the GIL" href="04_numba.html" />
+    <link rel="prev" title="2. xarray, netcdf and zarr" href="02_xarray_zarr.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <h1 class="site-logo" id="site-title">HPP project</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="00_intro.html">
+   High Performance Python
+  </a>
+ </li>
+</ul>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="01_joblib.html">
+   1. Introduction to joblib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_xarray_zarr.html">
+   2. xarray, netcdf and zarr
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   3. Using dask and zarr for multithreaded input/output
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_numba.html">
+   4. Using numba to release the GIL
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_dask_quickstart.html">
+   5. A short dask example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_pybind11.html">
+   6. Using C++/Fortran libraries with pybind11
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07_cffi.html">
+   7. Calling C++/Fortran using ctypes
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/03_dask_and_zarr.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> On this page
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#zarr">
+   3.1. zarr
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dask">
+   3.2. dask
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-write-and-read-zarr-arrays-using-multiple-threads">
+     3.2.1. Example, write and read zarr arrays using multiple threads
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-230-mbytes-of-fake-data">
+     3.2.2. Create 230 Mbytes of  fake data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#copy-to-a-zarr-file-on-disk-using-multiple-threads">
+     3.2.3. Copy to a zarr file on disk, using multiple threads
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#add-some-attributes">
+     3.2.4. Add some attributes
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-an-array-of-zeros-note-that-compression-shrinks-it-from-230-mbytes-to-321-bytes">
+     3.2.5. Create an array of zeros – note that compression shrinks it from 230 Mbytes to 321 bytes
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#copy-input-to-output-using-chunks">
+     3.2.6. copy input to output using chunks
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-a-dask-array-from-a-zarr-disk-file">
+     3.2.7. Create a dask array from a zarr disk file
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-following-calculation-uses-numpy-so-it-releases-the-gil">
+     3.2.8. The following calculation uses numpy, so it releases the GIL
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#note-that-result-hasn-t-been-computed-yet">
+     3.2.9. Note that result hasn’t been computed yet
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#now-do-the-calculation">
+     3.2.10. Now do the calculation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#you-can-evaluate-your-own-functions-on-dask-arrays">
+     3.2.11. You can evaluate your own functions on dask arrays
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="using-dask-and-zarr-for-multithreaded-input-output">
+<h1><span class="section-number">3. </span>Using dask and zarr for multithreaded input/output<a class="headerlink" href="#using-dask-and-zarr-for-multithreaded-input-output" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">zarr</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">pytz</span>
+<span class="kn">from</span> <span class="nn">zarr.util</span> <span class="kn">import</span> <span class="n">human_readable_size</span>
+<span class="kn">import</span> <span class="nn">dask</span>
+<span class="kn">import</span> <span class="nn">dask.array</span> <span class="k">as</span> <span class="nn">da</span>
+<span class="kn">from</span> <span class="nn">dask.diagnostics</span> <span class="kn">import</span> <span class="n">Profiler</span><span class="p">,</span> <span class="n">ResourceProfiler</span><span class="p">,</span> <span class="n">CacheProfiler</span>
+<span class="kn">from</span> <span class="nn">dask.diagnostics.profile_visualize</span> <span class="kn">import</span> <span class="n">visualize</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Many python programmers use <a class="reference external" href="https://support.hdfgroup.org/HDF5/">hdf5</a> through either the <a class="reference external" href="http://www.h5py.org/">h5py</a> or <a class="reference external" href="http://www.pytables.org/">pytables</a> modules to store large dense arrays.  One drawback of the hdf5 implementation is that it is basically <strong>single-threaded</strong>, that is only one core can read or write to a dataset at any one time.  Multithreading makes data compression much more attractive, because data sections can be decompressing/compressing simultaneouly while the data is read/written.</p></li>
+</ul>
+<div class="section" id="zarr">
+<h2><span class="section-number">3.1. </span>zarr<a class="headerlink" href="#zarr" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://zarr.readthedocs.io/en/latest/?badge=latest">zarr</a> keeps the h5py interface (which is similar to numpy’s), but allows different choices for file compression and is fully multithreaded.  See <a class="reference external" href="http://alimanfoo.github.io/2016/05/16/cpu-blues.html">Alistair Miles original blog entry</a> for a discussion of the motivation behind zarr.</p></li>
+</ul>
+</div>
+<div class="section" id="dask">
+<h2><span class="section-number">3.2. </span>dask<a class="headerlink" href="#dask" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://dask.pydata.org/en/latest/">dask</a> is a Python library that implements lazy data structures (array, dataframe, bag) and a clever thread/process scheduler.  It integrates with zarr to allow calculations on datasets that don’t fit into core memory, either in a single node or across a cluster.</p></li>
+</ul>
+<div class="section" id="example-write-and-read-zarr-arrays-using-multiple-threads">
+<h3><span class="section-number">3.2.1. </span>Example, write and read zarr arrays using multiple threads<a class="headerlink" href="#example-write-and-read-zarr-arrays-using-multiple-threads" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="create-230-mbytes-of-fake-data">
+<h3><span class="section-number">3.2.2. </span>Create 230 Mbytes of  fake data<a class="headerlink" href="#create-230-mbytes-of-fake-data" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wvel_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">8000</span><span class="p">,</span><span class="mi">7500</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">human_readable_size</span><span class="p">(</span><span class="n">wvel_data</span><span class="o">.</span><span class="n">nbytes</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="copy-to-a-zarr-file-on-disk-using-multiple-threads">
+<h3><span class="section-number">3.2.3. </span>Copy to a zarr file on disk, using multiple threads<a class="headerlink" href="#copy-to-a-zarr-file-on-disk-using-multiple-threads" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">item</span><span class="o">=</span><span class="s1">&#39;disk1_data&#39;</span>
+<span class="n">store</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">DirectoryStore</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<span class="n">group</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">store</span><span class="p">,</span><span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">synchronizer</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">ThreadSynchronizer</span><span class="p">())</span>
+<span class="n">the_var</span><span class="o">=</span><span class="s1">&#39;wvel&#39;</span>
+<span class="n">out_zarr1</span><span class="o">=</span><span class="n">group</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">the_var</span><span class="p">,</span><span class="n">shape</span><span class="o">=</span><span class="n">wvel_data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">wvel_data</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span><span class="n">chunks</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span><span class="mi">7500</span><span class="p">])</span>
+<span class="n">out_zarr1</span><span class="p">[</span><span class="o">...</span><span class="p">]</span><span class="o">=</span><span class="n">wvel_data</span><span class="p">[</span><span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="add-some-attributes">
+<h3><span class="section-number">3.2.4. </span>Add some attributes<a class="headerlink" href="#add-some-attributes" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">now</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">pytz</span><span class="o">.</span><span class="n">UTC</span><span class="p">)</span>
+<span class="n">timestamp</span><span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">))</span>
+<span class="n">out_zarr1</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;history&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;written for practice&#39;</span>
+<span class="n">out_zarr1</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;creation_date&#39;</span><span class="p">]</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>
+<span class="n">out_zarr1</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;gmt_timestap&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">timestamp</span>
+<span class="n">out_zarr1</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="create-an-array-of-zeros-note-that-compression-shrinks-it-from-230-mbytes-to-321-bytes">
+<h3><span class="section-number">3.2.5. </span>Create an array of zeros – note that compression shrinks it from 230 Mbytes to 321 bytes<a class="headerlink" href="#create-an-array-of-zeros-note-that-compression-shrinks-it-from-230-mbytes-to-321-bytes" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">8000</span><span class="p">,</span><span class="mi">7500</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">item</span><span class="o">=</span><span class="s1">&#39;disk2_data&#39;</span>
+<span class="n">store</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">DirectoryStore</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<span class="n">group</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">store</span><span class="p">,</span><span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">synchronizer</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">ThreadSynchronizer</span><span class="p">())</span>
+<span class="n">the_var</span><span class="o">=</span><span class="s1">&#39;wvel&#39;</span>
+<span class="n">out_zarr2</span><span class="o">=</span><span class="n">group</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">the_var</span><span class="p">,</span><span class="n">shape</span><span class="o">=</span><span class="n">a2</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">a2</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span><span class="n">chunks</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span><span class="mi">7500</span><span class="p">])</span>
+<span class="n">out_zarr2</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="copy-input-to-output-using-chunks">
+<h3><span class="section-number">3.2.6. </span>copy input to output using chunks<a class="headerlink" href="#copy-input-to-output-using-chunks" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">item</span><span class="o">=</span><span class="s1">&#39;disk2_data&#39;</span>
+<span class="n">store</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">DirectoryStore</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<span class="n">group</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">store</span><span class="p">,</span><span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">synchronizer</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">ThreadSynchronizer</span><span class="p">())</span>
+<span class="n">the_var</span><span class="o">=</span><span class="s1">&#39;wvel&#39;</span>
+<span class="n">out_zarr</span><span class="o">=</span><span class="n">group</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">the_var</span><span class="p">,</span><span class="n">shape</span><span class="o">=</span><span class="n">wvel_data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">wvel_data</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span><span class="n">chunks</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span><span class="mi">7500</span><span class="p">])</span>
+<span class="n">out_zarr2</span><span class="p">[</span><span class="o">...</span><span class="p">]</span><span class="o">=</span><span class="n">out_zarr1</span><span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="n">out_zarr2</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="create-a-dask-array-from-a-zarr-disk-file">
+<h3><span class="section-number">3.2.7. </span>Create a dask array from a zarr disk file<a class="headerlink" href="#create-a-dask-array-from-a-zarr-disk-file" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">da_input</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">out_zarr2</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="n">out_zarr1</span><span class="o">.</span><span class="n">chunks</span><span class="p">)</span>
+<span class="n">da_input</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="the-following-calculation-uses-numpy-so-it-releases-the-gil">
+<h3><span class="section-number">3.2.8. </span>The following calculation uses numpy, so it releases the GIL<a class="headerlink" href="#the-following-calculation-uses-numpy-so-it-releases-the-gil" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">=</span><span class="p">(</span><span class="n">da_input</span><span class="o">**</span><span class="mf">2.</span> <span class="o">+</span> <span class="n">da_input</span><span class="o">**</span><span class="mf">3.</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">result</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="note-that-result-hasn-t-been-computed-yet">
+<h3><span class="section-number">3.2.9. </span>Note that result hasn’t been computed yet<a class="headerlink" href="#note-that-result-hasn-t-been-computed-yet" title="Permalink to this headline">¶</a></h3>
+<p>Here is a graph of how the calculation will be split among 4 threads</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask.dot</span> <span class="kn">import</span> <span class="n">dot_graph</span>
+<span class="n">dot_graph</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">dask</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="now-do-the-calculation">
+<h3><span class="section-number">3.2.10. </span>Now do the calculation<a class="headerlink" href="#now-do-the-calculation" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">Profiler</span><span class="p">()</span> <span class="k">as</span> <span class="n">prof</span><span class="p">,</span> <span class="n">ResourceProfiler</span><span class="p">(</span><span class="n">dt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span> <span class="k">as</span> <span class="n">rprof</span><span class="p">,</span>\
+              <span class="n">CacheProfiler</span><span class="p">()</span> <span class="k">as</span> <span class="n">cprof</span><span class="p">:</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Visualize the cpu, memory and cache for the 4 threads</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">visualize</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">the_plot</span><span class="o">=</span><span class="n">visualize</span><span class="p">([</span><span class="n">prof</span><span class="p">,</span> <span class="n">rprof</span><span class="p">,</span><span class="n">cprof</span><span class="p">],</span> <span class="n">min_border_top</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">min_border_bottom</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Here is the dask profile:  <span class="xref myst">profile_out</span></p></li>
+</ul>
+</div>
+<div class="section" id="you-can-evaluate-your-own-functions-on-dask-arrays">
+<h3><span class="section-number">3.2.11. </span>You can evaluate your own functions on dask arrays<a class="headerlink" href="#you-can-evaluate-your-own-functions-on-dask-arrays" title="Permalink to this headline">¶</a></h3>
+<p>If your functons release the GIL, you can get multithreaded computation using <a class="reference external" href="http://dask.pydata.org/en/latest/delayed.html">dask.delayed</a></p>
+</div>
+</div>
+</div>
+
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="02_xarray_zarr.html" title="previous page"><span class="section-number">2. </span>xarray, netcdf and zarr</a>
+    <a class='right-next' id="next-link" href="04_numba.html" title="next page"><span class="section-number">4. </span>Using numba to release the GIL</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By The Jupyter Book community<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    <script src="_static/js/index.js"></script>
+    
+  </body>
+</html>
