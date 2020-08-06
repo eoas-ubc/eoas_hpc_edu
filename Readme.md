@@ -1,5 +1,7 @@
-# This repo contains a jupyter-book along with the docker-compose.yml and Dockerfiles needed
-  to build and bring up 5 containers to view the book and run the example notebooks.
+# EOAS python tutorials
+
+This repo contains a jupyter-book along with the docker-compose.yml and Dockerfiles needed
+to build and bring up 5 containers to view the book and run the example notebooks.
 
 # To run the examples
 
