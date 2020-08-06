@@ -15,13 +15,15 @@ docker-compose up
 
 2) open firefox or chrome and in one tab open:
 
-      localhost:8500
+       localhost:8500
 
-   to see the formated notebooks and
+   to see the formated notebooks
+
+   and in a second tab open
 
        localhost:9500
 
-   to access the running notebook server
+   to access the running notebook server, using the password "friend" (no quotes)
 
 3) To stop and remove all processes, containers and images:
 
