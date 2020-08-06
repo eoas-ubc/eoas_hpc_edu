@@ -1,0 +1,11 @@
+file: 00_intro
+numbered: true
+sections:
+- file: 01_joblib
+- file: 02_xarray_zarr
+- file: 03_dask_and_zarr
+- file: 04_numba
+- file: 05_dask_quickstart
+- file: 06_pybind11
+- file: 07_cffi
+

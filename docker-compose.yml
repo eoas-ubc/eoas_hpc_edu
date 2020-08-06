@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  scheduler:
+    image: phaustin/base_pangeo:aug6
+    depends_on: [pangeo-notebook]
+    hostname: dask-scheduler
+    ports:
+      - "8786:8786"
+      - "8787:8787"
+    command: ["dask-scheduler"]
+    networks:
+        - dask_net
+
+  worker1:
+    image: phaustin/base_pangeo:aug6
+    depends_on: [pangeo-notebook]
+    hostname: dask-worker1
+    command: ["dask-worker", "tcp://scheduler:8786"]
+    networks:
+        - dask_net
+
+  worker2:
+    image: phaustin/base_pangeo:aug6
+    depends_on: [pangeo-notebook]
+    hostname: dask-worker2
+    command: ["dask-worker", "tcp://scheduler:8786"]
+    networks:
+        - dask_net
+
+  webserver:
+    build:
+      context: .
+      dockerfile: apache_webserver/Dockerfile
+    image: phaustin/webserver_intropy:aug6
+    container_name: webserver_intropy
+    ports:
+      - "${TEXT_PORT}:80"
+    volumes:
+      - type: bind
+        source: ./aug2020/_build/html
+        target: /usr/local/apache2/htdocs
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - jupyterhub_data:/srv/jupyterhub
+    networks:
+      - dask_net
+
+  pangeo-notebook:
+      build:
+        context: ./pangeo_notebook
+        dockerfile: Dockerfile
+      image: phaustin/base_pangeo:aug6
+      container_name: base_pangeo
+      hostname: notebook
+      volumes:
+        - ${LOCAL_NOTEBOOK_DIR}:/home/jovyan/notebooks
+        - ${LOCAL_DATASETS}:/home/jovyan/work/datasets
+        - ${LOCAL_MODULES}:/home/jovyan/work/modules
+        - "/var/run/docker.sock:/var/run/docker.sock"
+      ports:
+        - ${NB_PORT}:8888
+      environment:
+        - DASK_SCHEDULER_ADDRESS="tcp://scheduler:8786"
+      networks:
+        - dask_net
+      command: "start-notebook.sh \
+         --NotebookApp.password=${ACCESS_TOKEN}"
+      #command: ["start.sh", "jupyter", "lab"]
+
+# the actual name will be <directory_name>_<network_name>
+networks:
+    dask_net:
+      driver: bridge
+
+volumes:
+  jupyterhub_data:
+
