@@ -1,7 +1,9 @@
 # EOAS python tutorials
 
 This repo contains a jupyter-book along with the docker-compose.yml and Dockerfiles needed
-to build and bring up 5 containers to view the book and run the example notebooks.
+to build and bring up 5 containers (a webserver, a notebook server, a dask schedular and
+two dask works) to view the book and run the example notebooks.  The labs rendered into
+a jupyter-book can be viewed [here](https://phaustin.github.io/eoas_python/00_intro.html)
 
 # To run the examples
 
