@@ -20,11 +20,13 @@ kernelspec:
 
 1) Update on our 3 year [OCESE tlef](https://eoas-ubc.github.io/) for undergraduate education
 
-2) Introduce the grad student/faculty/postdoc component being build at [eoas_python](https://github.com/eoas-ubc/eoas_python)
+2) An example jupyter-book: [Problem solving with python](https://phaustin.github.io/Problem-Solving-with-Python-37-Edition/)
 
-3) Next steps -- start a discussion about what high performance computing problem(s) you'd like to solve.  This discussion can occur via zoom chat today, pull requests on [eoas_python](https://github.com/eoas-ubc/eoas_python) and on the `#high-performance-python channel` in the [UBC datascience slack workspace](https://join.slack.com/t/ubc-datascience/signup)
+3) Introduce the grad student/faculty/postdoc component being build at [eoas_python](https://github.com/eoas-ubc/eoas_python)
+
+4) Next steps -- start a discussion about what high performance computing problem(s) you'd like to solve.  This discussion can occur via zoom chat today, pull requests on [eoas_python](https://github.com/eoas-ubc/eoas_python) and on the `#high-performance-python channel` in the [UBC datascience slack workspace](https://join.slack.com/t/ubc-datascience/signup)
    
-4) Where we're heading: We want to offer  [grad courses like this](https://brian-rose.github.io/ClimateLaboratoryBook/courseware/climlab-intro.html) and increase your comfort level with the [pangeo tools](http://pangeo.io/packages.html) and accessing big data in the cloud.
+5) Where we're heading: We want to offer  [grad courses like this](https://brian-rose.github.io/ClimateLaboratoryBook/courseware/climlab-intro.html) and increase your comfort level with the [pangeo tools](http://pangeo.io/packages.html) and accessing big data in the cloud.
 
 +++ {"slideshow": {"slide_type": "slide"}}
 
