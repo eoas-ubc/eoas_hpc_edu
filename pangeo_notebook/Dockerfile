@@ -13,7 +13,7 @@ RUN apt-get update --fix-missing \
 
 # Copy over build files. Unfortunately we can't use $NB_UID/$NB_GID
 # in the `--chown` statement, so we need to hardcode these values.
-COPY --chown=1000:100 requirements.txt postBuild $HOME/
+COPY --chown=1000:100 requirements_linux.txt environment_linux.txt postBuild $HOME/
 RUN mkdir -p /usr/local/share/jupyter \
     && chmod a+r,a+w,a+x /usr/local/share/jupyter 
 
@@ -23,24 +23,13 @@ WORKDIR $HOME
 
 # Install Python 3 packages
 RUN  conda install --quiet --yes \
-    'pip' \
-    'joblib' \
-    'xarray' \
-    'numba' \
-    'zarr' \
-    'scipy' \
-    'matplotlib' \
-    'rise' \
-    'jupyter-server-proxy' \
-    'netCDF4' \
-    'graphviz' \
-    'python-graphviz' \
+    --file environment_linux.txt \
     && \
     conda install -c bokeh jupyter_bokeh \
     && \
     conda clean --all -f -y \
     && \
-    pip install -r requirements.txt
+    pip install -r requirements_linux.txt
 
 RUN echo "Checking for 'postBuild'..." \
     && export PATH=${NB_PYTHON_PREFIX}/bin:${PATH} \
