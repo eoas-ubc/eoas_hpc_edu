@@ -46,5 +46,7 @@ docker rmi $(docker images -q)
 
 ### To appear
 
-We'll be posting a series of jupyter books in the next 3 months that cover a range of topics relevant research computing.
+We'll be posting a series of jupyter books in the next 3 months that cover a range of topics relevant research computing.  First up will be a multi-container book that demonstrates some xarray, dask, and joblib workflows.  [here is a rendered preliminary version](https://eoas-ubc.github.io/eoas_hpc_edu/00_intro.html)
+
+
 
