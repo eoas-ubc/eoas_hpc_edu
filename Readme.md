@@ -11,7 +11,11 @@ This website will eventually be an graduate education companion to the [OCESE pr
 
 ## Examples
 
-### Problem solving with python
+### Problem solving with Python, Peter D. Kazarinoff, PhD
+
+This is a fork of the [git repo](https://github.com/ProfessorKazarinoff/Problem-Solving-with-Python-37-Edition.git) for the book: Problem Solving with Python 3.7 Edition by Peter D. Kazarinoff, PhDo
+
+If you like this book, please consider purchasing a hard copy version on Amazon: [https://www.amazon.com/dp/1693405415](https://www.amazon.com/dp/1693405415)
 
 The formatted version: https://phaustin.github.io/Problem-Solving-with-Python-37-Edition/
 
@@ -34,7 +38,7 @@ docker-compose up
 
        localhost:8500
 
-3) Now take a look at your local version of [section 6.1.5](https://phaustin.github.io/Problem-Solving-with-Python-37-Edition/05-NumPy-and-Arrays/05_05-Array-Indexing.html). If you click on the rocketship and launch binderhub, you should get a live jupyternotebook and be able to work on the page.
+3) Now take a look at your local version of [section 6.1.5](https://phaustin.github.io/Problem-Solving-with-Python-37-Edition/05-NumPy-and-Arrays/05_05-Array-Indexing.html). If you right-click on the rocketship and launch Jupyterhub in a new tab, you will be prompted for a password. Type "friend" (without the quotes) to start a live notebook for that page.
 
 
 4) To stop and remove all processes, containers and images:
