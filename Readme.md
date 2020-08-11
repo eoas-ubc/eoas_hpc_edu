@@ -4,7 +4,7 @@ This website will eventually be an graduate education companion to the [OCESE pr
 
 ## The basic approach:
 
-1) All material is presented using [https://jupyterbook.org/intro.html]
+1) All material is presented using https://jupyterbook.org/intro.html
 2) Each book can be run in a docker container installed on your own computer.
    These containers will be tested using continuous integration, if they don't work, it's a bug.
 3) The tools to change and rebuild the jupyterbook are included in the container.
@@ -13,7 +13,7 @@ This website will eventually be an graduate education companion to the [OCESE pr
 
 ### Problem solving with Python, Peter D. Kazarinoff, PhD
 
-This is a fork of the [git repo](https://github.com/ProfessorKazarinoff/Problem-Solving-with-Python-37-Edition.git) for the book: Problem Solving with Python 3.7 Edition by Peter D. Kazarinoff, PhDo
+This is a fork of the [git repo](https://github.com/ProfessorKazarinoff/Problem-Solving-with-Python-37-Edition.git) for the book: Problem Solving with Python 3.7 Edition by Peter D. Kazarinoff, PhD
 
 If you like this book, please consider purchasing a hard copy version on Amazon: [https://www.amazon.com/dp/1693405415](https://www.amazon.com/dp/1693405415)
 
