@@ -46,7 +46,7 @@ docker-compose up
 ```
 bash bringdown.sh
 docker rmi $(docker images -q)
-``
+```
 
 ### To appear
 
