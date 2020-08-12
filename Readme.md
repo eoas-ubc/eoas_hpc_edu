@@ -1,6 +1,6 @@
 # EOAS HPC tutorials
 
-This website will eventually be an graduate education companion to the [OCESE project](https://eoas-ubc.github.io/) for undergraduate teaching with jupyter notebooks.
+This website will eventually be a graduate education companion to the [OCESE project](https://eoas-ubc.github.io/) for undergraduate teaching with jupyter notebooks.
 
 ## The basic approach:
 
